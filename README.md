@@ -1,16 +1,16 @@
 # CLAP-triangle-counting
-This is the implementation of CLAP, a locality aware and parallel triangle counting with content addressable memory (CAM).
+This is the official implementation of the paper "CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory".
 
 ## Code structure
-`CAM_simulator` contains a simulator of our CAM-based triangle counting architecture implemented by c++, it perform the triangle counting of a given target graph and generate the memory trace at the same time  
+`CAM_simulator` contains a simulator of our CAM-based triangle counting architecture implemented with C++, it performs the triangle counting task on a given target graph and generates the memory trace at the same time.  
 
-`reorder_preprocess` contains the pre-processing technique implemented by python that reorder the graph to enable better performance of triangle counting  
+`reorder_preprocess` contains the the force-based node reorder method that reorders the graph indices to enable better runtime performance. It is implemented with Python.
 
-`data` contains the example datesets to run the code  
+`data` contains the example datesets to run the code.  
 
 ## Requirement
-- python 3.9+
-- CMake 3.10+
+- python >= 3.9
+- CMake >= 3.10
 - C++ standard 14
 
 ## Setup
