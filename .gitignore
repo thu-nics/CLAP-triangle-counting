@@ -1,2 +1,4 @@
 build/
 output/
+dist/
+rabbit.egg-info/
