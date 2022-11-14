@@ -1,25 +1,13 @@
-from audioop import avg
-from multiprocessing.context import ForkContext
-from operator import index
-import sys
-from numpy.lib.function_base import copy
-import concurrent.futures
 import time
 
 import argparse
 import networkx as nx
 import random
-import pickle
 from array import array
-import math
 import numpy as np
 
-from handy_graph import ReadEdgeFile, WriteEdgeList
-from handy_graph import el2nx, nx2dict
 from typing import Any, Optional, Tuple, List, Set, Dict, Union
-from handy_graph.develop.nx_utils import draw_adjmatrix
 
-from tqdm import tqdm
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from matplotlib.axis import Axis
@@ -137,15 +125,6 @@ def reverse_reorder(graph: nx.Graph, seed = 0):
     graph = nx.relabel_nodes(graph, node_mapping, copy = True)
     return node_mapping, graph
 
-def ReadCommDict(file_name: str) -> Dict:
-    comm_dict = dict()
-    with open(file_name, 'r') as f:
-        for line in f:
-            line = line.strip()
-            node_id, comm_id = line.split()
-            comm_dict[int(node_id)] = int(comm_id)
-    return comm_dict
-
 def community_preprocessing(comm_dict:Dict = None):
     '''
     comm_dict: key: node index value: the community index this node belongs to
@@ -165,6 +144,43 @@ def community_preprocessing(comm_dict:Dict = None):
         comm_list[comm_mapping[comm_dict[node]]].append(node)
     
     return comm_mapping, comm_list
+
+def WriteEdgeList(filename: Union[str, Any], Edge_list: List[Union[List, Tuple]], first_line: str = None) -> None:
+    '''
+    write list of edges to file. e.g.
+    (optional) first_line
+    0 1
+    0 2
+    1 2
+    '''
+    num_E = len(Edge_list)
+    print('GraphFileIO: write edge of the whole graph is',num_E)
+
+    with open(filename, 'w') as f:
+        if first_line:
+            f.write(first_line)
+            if first_line[-1] != '\n':
+                f.write('\n')
+        for edge in Edge_list:
+            f.write( str(edge[0])+" "+str(edge[1])+"\n" )
+    f.close()
+
+def el2nx(edge_list: list, directed= False) -> nx.Graph:
+    '''
+    convert edge_list to networkx graphs
+    '''
+    graph = nx.Graph(directed= directed)
+    graph.add_edges_from(edge_list)
+    return graph
+
+def nx2dict(graph: Union[nx.Graph, nx.DiGraph]):
+    adj_dict = dict()
+    for node in graph.nodes():
+        neighbor = [n for n in graph.neighbors(node)]
+        neighbor.sort()
+        # if len(neighbor) != 0:
+        adj_dict[node] = neighbor
+    return adj_dict
 
 def ReadEdgeFile_comm(file: str, edge_list: List = None, node_set: Set = None, comm_dict: Dict = None) -> Optional[Tuple[List, Set, Dict]]:
     '''
@@ -206,14 +222,6 @@ def ReadEdgeFile_comm(file: str, edge_list: List = None, node_set: Set = None, c
 
     num_E = len(edge_list)
     
-    # to make the first node smaller than the second in every edge
-    # for j in range(num_E): 
-    #     if edge_list[j][0]>edge_list[j][1]:
-    #         t = edge_list[j][0]
-    #         edge_list[j][0] = edge_list[j][1]
-    #         edge_list[j][1] = t
-    
-    # sort the edges
     edge_list = sorted(edge_list,key=lambda x:(x[0],x[1])) 
     
     print('GraphFileIO: edge_num of the whole graph is',len(edge_list))

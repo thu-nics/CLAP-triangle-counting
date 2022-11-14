@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 import time
 import torch
-import os
-import pickle
 import rabbit
-import sys
 
 class graph_input(object):
     def __init__(self, path=None):
