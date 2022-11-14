@@ -103,6 +103,6 @@ In the view of matrix, we only store the lower triangular part of the adjacency 
 
 For example, for a graph consists of a four-clique, the CSR format expression can be:
 ```
-pointer array: 0 0 1 3 6 %point to the correspond position in the following array)
+pointer array: 0 0 1 3 6 %point to the correspond position in the following array
 neighbor/column indices array: 0 0 1 0 1 2
 ```
