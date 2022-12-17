@@ -86,7 +86,7 @@ For example, for a graph consists of a four-clique, the COO format expression ca
 We revised the COO format to record the cluster information of nodes. We use the revised COO format as the input format of force-based reorder.  
 The first line is a '#' followed by the number of node $|V|$ and the number of edge $|E|$.  
 There are $|E|$ lines followed, each line consists of four numbers.  
-The first and second number of node is the node index of source node and destination node of an edge. The third and fourth number is the cluster index of the source node and destination node.  
+The first and second number of node is the node index of source node and destination node of an edge. The third and fourth number is the cluster index of the source node and destination node (the cluster indices does not have to be consecutive integers).  
 The index of nodes are consecutive integers start from zero.  
 
 For example, for a graph consists of two triangles, the revised COO format expression can be:
@@ -95,8 +95,8 @@ For example, for a graph consists of two triangles, the revised COO format expre
 0 1 0 0
 1 2 0 0
 2 0 0 0
-3 4 1 1
-4 5 1 1
+3 4 2 2
+4 5 2 2
 3 5 2 2
 ```
 ### CSR format
