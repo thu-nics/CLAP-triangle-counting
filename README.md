@@ -61,6 +61,9 @@ Run the simulator
 sh CAM_run.sh
 ```
 
+## Demonstraction of Force-based reorder
+![force-based demo](link)
+
 ## Data format
 If you plan to run the code on other graph, please convert the graph into the following specified formats and modify the name of graph in the corresponding position of `rabbit_order.py` `force_order.py` `CAM_run.sh`.  
 ### COO format
