@@ -9,7 +9,7 @@ This is the official implementation of the paper "CLAP: Locality Aware and Paral
 `data` contains the example datesets to run the code.  
 
 ## Requirement
-- python >= 3.9
+- Python >= 3.9
 - CMake >= 3.10
 - C++ standard 14
 
