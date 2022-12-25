@@ -9,7 +9,7 @@ This is the official implementation of the paper "CLAP: Locality Aware and Paral
 `data` contains the example datesets to run the code.  
 
 ## Requirement
-- python >= 3.9
+- Python >= 3.9
 - CMake >= 3.10
 - C++ standard 14
 
@@ -61,7 +61,7 @@ Run the simulator
 sh CAM_run.sh
 ```
 
-## Demonstraction of Force-based reorder
+## Demonstration of Force-based reorder
 This is the adjacency matrix of the graph in the process of force-based reorder.  
 ![force-based demo](https://github.com/dubcyfor3/CLAP-triangle-counting/blob/main/force-based%20demo.gif)
 
