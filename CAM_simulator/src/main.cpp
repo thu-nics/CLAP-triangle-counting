@@ -1,6 +1,7 @@
 #define PE_NUM 120
 #define CAM_SIZE 512
 #define RECORD_TRACE true
+#define SORTED_CAM false
 
 #include <iostream>
 #include <vector>
@@ -19,6 +20,11 @@
 
 
 unsigned long int max_num_trace = 5000000;
+
+
+bool cmp_pair(const std::pair<int, int> &a, const std::pair<int, int> &b){
+    return a.second < b.second;
+}
 
 
 int main(int argc, const char *argv[]){
@@ -71,6 +77,7 @@ int main(int argc, const char *argv[]){
     std::cout << "prepare time: " << prepare_time << std::endl;
 
     //mining triangle
+    std::vector<std::pair<int, int>> CAM_instance;
     auto computeStart= clock.now();
 
     int numCores = usedCore;
@@ -201,27 +208,36 @@ int main(int argc, const char *argv[]){
             main_mem[i_PE].add_trace(&CSR_pos[0]+end_pos, &CSR_pos[0]+end_pos+1, mem_offset_pos, 'l');
             main_mem[i_PE].add_trace(begin, end, mem_offset_neigh, 'l');
 
+            CAM_instance.clear();            
             for (int a = begin_pos; a < end_pos; a++)
             {
                 const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
-                const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];
-                
+                const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];               
                 for (auto b_iter = Na_begin; b_iter != Na_end; b_iter++)
                 {
                     int b = *b_iter;
-                    const int* Nb_begin = CSR_neigh.data() + CSR_pos[b];
-                    const int* Nb_end = CSR_neigh.data() + CSR_pos[b + 1];
-
-                    main_mem[i_PE].autoswitch_track_detail(max_num_trace);
-                    main_mem[i_PE].add_trace(&CSR_pos[0]+b, &CSR_pos[0]+b+2, mem_offset_pos, 'l');
-                    main_mem[i_PE].add_trace(Nb_begin, Nb_end, mem_offset_neigh, 'l');
-                    for (auto c_iter = Nb_begin; c_iter != Nb_end; c_iter++)
+                    CAM_instance.push_back(std::make_pair(a, b));
+                }                    
+                
+            }
+#if SORTED_CAM
+            std::sort(CAM_instance.begin(), CAM_instance.end(), cmp_pair);
+#endif
+            for (int i = 0; i < CAM_instance.size(); i++)
+            {
+                int a = CAM_instance[i].first;
+                int b = CAM_instance[i].second;
+                const int* Nb_begin = CSR_neigh.data() + CSR_pos[b];
+                const int* Nb_end = CSR_neigh.data() + CSR_pos[b + 1];
+                main_mem[i_PE].autoswitch_track_detail(max_num_trace);
+                main_mem[i_PE].add_trace(&CSR_pos[0]+b, &CSR_pos[0]+b+2, mem_offset_pos, 'l');
+                main_mem[i_PE].add_trace(Nb_begin, Nb_end, mem_offset_neigh, 'l');
+                for (auto c_iter = Nb_begin; c_iter != Nb_end; c_iter++)
+                {
+                    int c = *c_iter;
+                    if (std::find(CAM_instance.begin(), CAM_instance.end(), std::make_pair(a, c)) != CAM_instance.end())
                     {
-                        int c = *c_iter;
-                        if (std::binary_search(Na_begin, Na_end, c))
-                        {
-                            num_pattern++;
-                        }
+                        num_pattern++;
                     }
                 }
             }
