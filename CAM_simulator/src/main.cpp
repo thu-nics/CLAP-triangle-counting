@@ -1,5 +1,7 @@
-#define PE_NUM 120
-#define CAM_SIZE 512
+#define PE_NUM_1 120
+#define CAM_SIZE_1 512
+#define PE_NUM_2 4
+#define CAM_SIZE_2 1024
 #define RECORD_TRACE true
 #define SORTED_CAM false
 
@@ -14,6 +16,7 @@
 #include <string>
 #include <cstring>
 #include <list>
+#include <set>
 
 #include "vectorIO.hpp"
 #include "mem.hpp"
@@ -66,7 +69,7 @@ int main(int argc, const char *argv[]){
         CSR_neigh = std::move(g.CSR_neigh);
     }
 
-    mem<int> main_mem[PE_NUM];
+    mem<int> main_mem[PE_NUM_1+PE_NUM_2];
     long long end_addr, start_addr_pos, start_addr_neigh;
     long long mem_offset_pos, mem_offset_neigh;
 
@@ -86,6 +89,7 @@ int main(int argc, const char *argv[]){
     // begin mining loop
     std::list<std::pair<int,int>> workload;
     std::list<std::pair<int,int>> workload_pos;
+    std::set<int> large_degree_node;
 
 
     end_addr = 0;
@@ -95,7 +99,7 @@ int main(int argc, const char *argv[]){
     mem_offset_neigh = (long long)(&CSR_neigh[0]) - start_addr_neigh;
     end_addr = start_addr_neigh + (long long)CSR_neigh.size() * sizeof(int) + sizeof(int);
     
-    for (int i_PE = 0; i_PE < PE_NUM; i_PE++){
+    for (int i_PE = 0; i_PE < PE_NUM_1+PE_NUM_2; i_PE++){
 
         main_mem[i_PE].offset_addrs.push_back(start_addr_pos);
     }
@@ -109,9 +113,9 @@ int main(int argc, const char *argv[]){
     // std::cout << "&CSR_pos[0]+1: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << (&CSR_pos[0]+1) << std::endl;
     // compute workload
     
-    int real_cam_size = CSR_neigh.size() / PE_NUM;
-    if (real_cam_size > CAM_SIZE){
-        real_cam_size = CAM_SIZE;
+    int real_cam_size = CSR_neigh.size() / PE_NUM_1;
+    if (real_cam_size > CAM_SIZE_1){
+        real_cam_size = CAM_SIZE_1;
     }
     while(cur_node < num_node){
         int CAM_op = 0;
@@ -123,8 +127,8 @@ int main(int argc, const char *argv[]){
         {
             const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
             const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];
-            if ((Na_end - Na_begin) > real_cam_size ) // skip the node has neigh more than CAM_SIZE
-                continue;
+            if ((Na_end - Na_begin) > real_cam_size ) // deal with large degree node in large PU
+                large_degree_node.insert(a);
             if (cur_size + Na_end - Na_begin > real_cam_size)
                 break;
             cur_size += Na_end - Na_begin;
@@ -132,6 +136,8 @@ int main(int argc, const char *argv[]){
         cur_node = end_pos;
         for (int a = begin_pos; a < end_pos; a++)
         {
+            if (large_degree_node.find(a) != large_degree_node.end())
+                continue;
             const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
             const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];
             for (auto b_iter = Na_begin; b_iter != Na_end; b_iter++)
@@ -148,16 +154,17 @@ int main(int argc, const char *argv[]){
 
     }
 
+
     std::cout<< "compute done"<<std::endl;
     
     // assign workload
-    int state[PE_NUM] = {0};
-    int work_time[PE_NUM] = {0};
-    int operation[PE_NUM] = {0};
-    std::vector<std::vector<std::pair<int,int>>> work_pos_list(PE_NUM);
+    int state[PE_NUM_1] = {0};
+    int work_time[PE_NUM_1] = {0};
+    int operation[PE_NUM_1] = {0};
+    std::vector<std::vector<std::pair<int,int>>> work_pos_list(PE_NUM_1+PE_NUM_2);
     while(!workload.empty())
-    {
-        for (int i_PE = 0; i_PE < PE_NUM; i_PE++)
+    {        
+        for (int i_PE = 0; i_PE < PE_NUM_1; i_PE++)
         {
             if (state[i_PE] == 0 && !workload.empty())
             {
@@ -175,13 +182,19 @@ int main(int argc, const char *argv[]){
             }
         }
     }
+    int PE_id = 0;
+    for (auto i : large_degree_node)
+    {
+        work_pos_list[PE_NUM_1+PE_id].push_back(std::make_pair(i, i+1));
+        PE_id = (PE_id + 1) % (PE_NUM_2);
+    }
 
     std::cout<< "assign done"<<std::endl;
     int max_work_time = 0;
     int max_operation = 0;
     int max_PE = 0;
     long long total_CAM_op = 0;
-    for (int i_PE = 0; i_PE < PE_NUM; i_PE++)
+    for (int i_PE = 0; i_PE < PE_NUM_1; i_PE++)
     {
         total_CAM_op += operation[i_PE];
         if (work_time[i_PE] > max_work_time)
@@ -194,7 +207,7 @@ int main(int argc, const char *argv[]){
     long long num_pattern = 0;
 
     std::cout << "CAM_trace" << std::endl;
-    for (int i_PE = 0; i_PE < PE_NUM; i_PE++)
+    for (int i_PE = 0; i_PE < PE_NUM_1+PE_NUM_2; i_PE++)
     {
         for (int i = 0; i < work_pos_list[i_PE].size(); i++)
         {
@@ -211,6 +224,8 @@ int main(int argc, const char *argv[]){
             CAM_instance.clear();            
             for (int a = begin_pos; a < end_pos; a++)
             {
+                if (i_PE < PE_NUM_1 && large_degree_node.find(a) != large_degree_node.end())
+                    continue;
                 const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
                 const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];               
                 for (auto b_iter = Na_begin; b_iter != Na_end; b_iter++)
@@ -251,7 +266,7 @@ int main(int argc, const char *argv[]){
         }
         else {
 
-            for (int i_PE = 0; i_PE < PE_NUM; i_PE++)
+            for (int i_PE = 0; i_PE < PE_NUM_1+PE_NUM_2; i_PE++)
             {
                 total_trace_num += main_mem[i_PE].count_trace('a');
                 std::ofstream outfile;
