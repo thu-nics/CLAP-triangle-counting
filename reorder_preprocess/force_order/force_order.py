@@ -412,8 +412,8 @@ if __name__ == '__main__':
         if not os.path.exists(os.path.dirname(args.output_file)):
             os.makedirs(os.path.dirname(args.output_file))
 
-    graph_list =  ["citeseer"]# 'email-Enron', 'roadNet-PA', 'roadNet-TX', "p2p","astro", "mico","patent", "youtube", "lj","soc-LiveJournal1"
-    order = "force_test"
+    graph_list =  ["astro"]
+    order = "force_based_order"
     format = "csr_half"
 
     for graph_name in graph_list:

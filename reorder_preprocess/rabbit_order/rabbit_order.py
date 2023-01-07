@@ -119,7 +119,7 @@ class graph_input(object):
 
 if __name__ == "__main__":
     # path = sys.argv[1]
-    graph_list = ["citeseer"]
+    graph_list = ["astro"]
     for graph in graph_list:
         path = "../../data/edge_list/random/"+graph+".txt"
         pathout = "../../data/rabbit_with_cluster/"+graph+".txt"
