@@ -125,6 +125,10 @@ def reverse_reorder(graph: nx.Graph, seed = 0):
     graph = nx.relabel_nodes(graph, node_mapping, copy = True)
     return node_mapping, graph
 
+def init_order(graph: nx.Graph):
+    node_mapping = {v:v for v in graph.nodes}
+    return node_mapping, graph
+
 def community_preprocessing(comm_dict:Dict = None):
     '''
     comm_dict: key: node index value: the community index this node belongs to
@@ -244,7 +248,7 @@ def main(args, graph_name):
     graph = el2nx(edge_list, False)
 
 
-    node_mapping, graph = reverse_reorder(graph)
+    node_mapping, graph = init_order(graph)
 
     # node_mapping = {node:node for node in graph.nodes}
 
@@ -324,6 +328,7 @@ def main(args, graph_name):
             F_control = f_control(index = node_tuple[1], degree = node_tuple[3])
             F_cluster = f_cluster(index = node_tuple[1], comm_id_list = node_tuple[4:4+layer], comm_list_list = comm_list_list, comm_center_list = comm_center_list, node_mapping = node_mapping)
             node_tuple[2] += F_cluster + F_control
+
         relabel_list.sort(key = lambda x:x[2])
         for i in range(len(relabel_list)):
             relabel_list[i][1]=i
@@ -412,7 +417,7 @@ if __name__ == '__main__':
         if not os.path.exists(os.path.dirname(args.output_file)):
             os.makedirs(os.path.dirname(args.output_file))
 
-    graph_list =  ["astro"]
+    graph_list =  ["citeseer"]
     order = "force_based_order"
     format = "csr_half"
 
