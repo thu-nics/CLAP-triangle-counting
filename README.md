@@ -1,5 +1,5 @@
 # CLAP-triangle-counting
-This is the official implementation of the paper "CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory".
+This is the official software implementation of the paper "CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory".
 
 ## Code structure
 `CAM_simulator` contains a simulator of our CAM-based triangle counting architecture implemented with C++, it performs the triangle counting task on a given target graph and generates the memory trace at the same time.  
