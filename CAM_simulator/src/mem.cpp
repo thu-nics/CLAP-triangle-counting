@@ -16,7 +16,7 @@ int mem<T>::add_trace(const T* begin, const T* end, long long offset, char type)
         for (const T* i=begin; i!=end; i++) {
         if (track_cnt == 0){
             this_trace.type = type;
-            long long cur_addr = (long long)i;          
+            long long cur_addr = (long long)i;
             assert(cur_addr-offset>=0);
             this_trace.addr = (long long)(cur_addr-offset);
             mem_trace.push_back(this_trace);

@@ -4,7 +4,7 @@
 # 	    -Wswitch-default -Wuninitialized -Wwrite-strings \
 # 	    -Wno-sign-conversion -Wno-unused-function \
 #             -Wno-missing-declarations \
-#             -fopenmp -std=c++14 -mcx16 -O3 -DNDEBUG 
+#             -fopenmp -std=c++14 -mcx16 -O3 -DNDEBUG
 
 FLAGS =  -fopenmp -std=c++14 -mcx16 -O3
 LDLIBS   += -ltcmalloc_minimal -lnuma
@@ -22,4 +22,3 @@ clean:
 	$(RM) $(TARGETS) $(TARGETS:%=.%.P)
 
 -include .*.P
-

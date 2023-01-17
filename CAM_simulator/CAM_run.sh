@@ -9,7 +9,7 @@ TRACE_FOLDER="../output/trace/force_based_order"
 OUTFILE="force_based_order"
 mkdir $OUTPUT_FOLDER
 mkdir $TRACE_FOLDER
-for GRAPH in "astro" 
+for GRAPH in "astro"
 do
     mkdir $TRACE_FOLDER/$GRAPH
     $RUN_EXE $DATA_FOLDER/$GRAPH.bin 1 1 $TRACE_FOLDER/$GRAPH/$GRAPH >> $OUTPUT_FOLDER/$OUTFILE.stdout

@@ -2,7 +2,7 @@
 //  mem.hpp
 //  TriangleCounting
 //
-//  
+//
 //
 
 #ifndef mem_hpp

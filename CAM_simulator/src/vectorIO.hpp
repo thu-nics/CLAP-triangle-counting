@@ -32,10 +32,6 @@ struct Graph{
         CSR_node_pos = loadVector<int>(file);
         CSR_neigh = loadVector<int>(file);
         CSR_mid = loadVector<int>(file);
-        // for (int i = 1; i < NUM_SEP ; ++i) {
-        //     CSR_sep[i] = loadVector<int>(file);
-        // }
-        // CSR_sep[0] = CSR_node_pos;
     }
     void write(std::ostream& file){
         file.write((char*)&num_node,sizeof(int));

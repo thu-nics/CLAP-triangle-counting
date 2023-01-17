@@ -31,10 +31,10 @@ bool cmp_pair(const std::pair<int, int> &a, const std::pair<int, int> &b){
 
 
 int main(int argc, const char *argv[]){
-    
+
     // prepare
     auto clock = std::chrono::steady_clock();
-    
+
     // args
     if (argc!=4 && argc!=5){
         std::cout<<"argc: "<<argc<<std::endl;
@@ -47,7 +47,7 @@ int main(int argc, const char *argv[]){
     std::string filename = argv[1];
     int usedCore = std::stoi(argv[2]);
     int repeat = std::stoi(argv[3]);
-    
+
     // record time of load data
     auto loadStart = clock.now();
 
@@ -95,10 +95,10 @@ int main(int argc, const char *argv[]){
     end_addr = 0;
     start_addr_pos = end_addr;
     mem_offset_pos = (long long)(&CSR_pos[0]) - start_addr_pos;
-    start_addr_neigh = end_addr + (long long)CSR_pos.size() * sizeof(int) + sizeof(int);    
+    start_addr_neigh = end_addr + (long long)CSR_pos.size() * sizeof(int) + sizeof(int);
     mem_offset_neigh = (long long)(&CSR_neigh[0]) - start_addr_neigh;
     end_addr = start_addr_neigh + (long long)CSR_neigh.size() * sizeof(int) + sizeof(int);
-    
+
     for (int i_PE = 0; i_PE < PE_NUM_1+PE_NUM_2; i_PE++){
 
         main_mem[i_PE].offset_addrs.push_back(start_addr_pos);
@@ -112,7 +112,7 @@ int main(int argc, const char *argv[]){
     // std::cout << "&CSR_pos[0]: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << (&CSR_pos[0]) << std::endl;
     // std::cout << "&CSR_pos[0]+1: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << (&CSR_pos[0]+1) << std::endl;
     // compute workload
-    
+
     int real_cam_size = CSR_neigh.size() / PE_NUM_1;
     if (real_cam_size > CAM_SIZE_1){
         real_cam_size = CAM_SIZE_1;
@@ -146,7 +146,7 @@ int main(int argc, const char *argv[]){
                 const int* Nb_begin = CSR_neigh.data() + CSR_pos[b];
                 const int* Nb_end = CSR_neigh.data() + CSR_pos[b + 1];
                 CAM_op += Nb_end - Nb_begin;
-             
+
             }
         }
         workload.push_back(std::make_pair(cur_size, CAM_op));
@@ -156,14 +156,14 @@ int main(int argc, const char *argv[]){
 
 
     std::cout<< "compute done"<<std::endl;
-    
+
     // assign workload
     int state[PE_NUM_1] = {0};
     int work_time[PE_NUM_1] = {0};
     int operation[PE_NUM_1] = {0};
     std::vector<std::vector<std::pair<int,int>>> work_pos_list(PE_NUM_1+PE_NUM_2);
     while(!workload.empty())
-    {        
+    {
         for (int i_PE = 0; i_PE < PE_NUM_1; i_PE++)
         {
             if (state[i_PE] == 0 && !workload.empty())
@@ -221,19 +221,19 @@ int main(int argc, const char *argv[]){
             main_mem[i_PE].add_trace(&CSR_pos[0]+end_pos, &CSR_pos[0]+end_pos+1, mem_offset_pos, 'l');
             main_mem[i_PE].add_trace(begin, end, mem_offset_neigh, 'l');
 
-            CAM_instance.clear();            
+            CAM_instance.clear();
             for (int a = begin_pos; a < end_pos; a++)
             {
                 if (i_PE < PE_NUM_1 && large_degree_node.find(a) != large_degree_node.end())
                     continue;
                 const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
-                const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];               
+                const int* Na_end = CSR_neigh.data() + CSR_pos[a + 1];
                 for (auto b_iter = Na_begin; b_iter != Na_end; b_iter++)
                 {
                     int b = *b_iter;
                     CAM_instance.push_back(std::make_pair(a, b));
-                }                    
-                
+                }
+
             }
 #if SORTED_CAM
             std::sort(CAM_instance.begin(), CAM_instance.end(), cmp_pair);
@@ -278,13 +278,13 @@ int main(int argc, const char *argv[]){
                 }
                 else {
                     printf("Write to output_file %s%d\n", argv[4], i_PE);
-                    main_mem[i_PE].write_file(outfile, max_num_trace);                 
+                    main_mem[i_PE].write_file(outfile, max_num_trace);
                 }
             }
-            
+
 
         }
-    
+
 
     durtion = (clock.now() - computeStart).count() / 1e9;
     std::cout << "num_triangle: " << num_pattern << std::endl;

@@ -24,7 +24,7 @@ off_t file_size(const int fd) {
   struct stat st;
   if (fstat(fd, &st) != 0)
     RO_DIE << "stat(2): " << strerror(errno);
-  return st.st_size;   
+  return st.st_size;
 }
 
 struct file_desc {
@@ -166,4 +166,3 @@ using aux::edge;
 using aux::read;
 
 }  // namespace edge_list
-

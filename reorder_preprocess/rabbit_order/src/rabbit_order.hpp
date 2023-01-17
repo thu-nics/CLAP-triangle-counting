@@ -535,7 +535,7 @@ std::unique_ptr<std::pair<vint, vint>[]> merge_order(const graph& g) {
   for (vint v = 0; v < g.n(); ++v)
     ord[v] = {v, static_cast<vint>(g.es[v].size())};
 
-  __gnu_parallel::sort(&ord[0], &ord[g.n()], 
+  __gnu_parallel::sort(&ord[0], &ord[g.n()],
                        [](auto x, auto y) {return x.second < y.second;});
   return ord;
 }
@@ -570,11 +570,11 @@ graph aggregate(std::vector<std::vector<edge> > adj) {
     nbrs.reserve(g.n() * 2);  // heuristic value   TODO: tuning
 
     #pragma omp for schedule(static, 1)
-    for (vint i = 0; i < g.n(); ++i) 
+    for (vint i = 0; i < g.n(); ++i)
     {
       pends.erase(
-        boost::remove_if(pends, [&g, &tops, &nbrs](auto w)  
-        { 
+        boost::remove_if(pends, [&g, &tops, &nbrs](auto w)
+        {
           const vint u = merge(w, &nbrs, &g);
           if (u == w) tops.push_back(w);
           return u != vmax;  // remove if the merge successed
@@ -590,7 +590,7 @@ graph aggregate(std::vector<std::vector<edge> > adj) {
     ttotal = now_sec() - tstart;
     tmax   = ttotal;
 
-    // Merge the vertices in the pending state 
+    // Merge the vertices in the pending state
     #pragma omp barrier
     #pragma omp critical
     {
@@ -752,4 +752,3 @@ using aux::aggregate;
 using aux::compute_perm;
 
 }  // namespace rabbit_order
-

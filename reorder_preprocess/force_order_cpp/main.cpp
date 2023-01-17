@@ -26,7 +26,7 @@ float cluster_force(int index, float center)
     return force;
 }
 
-bool cmp_relabel(std::pair<float,int>a, std::pair<float,int>b) 
+bool cmp_relabel(std::pair<float,int>a, std::pair<float,int>b)
 {
     return a.first < b.first;
 }
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     g.load_revised_COO(path.c_str());
     float alpha_control = 0.95;
     float alpha_cluster = 0.05;
-    
+
     std::vector<std::pair<float, int>> relabel_list;
     std::vector<float> comm_center_list;
     std::vector<int> degree_list(g.degree_table.begin(), g.degree_table.end());
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
     auto clock = std::chrono::high_resolution_clock();
     auto start = clock.now();
-    
+
     std::sort(degree_list.begin(), degree_list.end());
     int cur_degree = 0;
     degree_interval[0] = std::make_pair(0, 0);
