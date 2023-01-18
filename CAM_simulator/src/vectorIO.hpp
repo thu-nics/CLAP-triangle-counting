@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 #include <vector>
-#define NUM_SEP 8
+
 template<class T>
 std::vector<T> loadVector(std::istream& file){
   int len;
@@ -25,7 +25,6 @@ struct Graph{
     std::vector<int> CSR_node_pos;
     std::vector<int> CSR_neigh;
     std::vector<int> CSR_mid;
-    std::vector<int> CSR_sep[NUM_SEP];
 
     void load(std::istream& file){
         file.read((char*)&num_node,sizeof(int));

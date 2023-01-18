@@ -4,10 +4,12 @@ DATA_FOLDER2="../data/CSR/force_based_order"
 
 DATA_FOLDER=$DATA_FOLDER2
 OUTPUT_FOLDER="../output"
+TRACE_PARENT_FOLDER="../output/trace"
 TRACE_FOLDER="../output/trace/force_based_order"
 
 OUTFILE="force_based_order"
 mkdir $OUTPUT_FOLDER
+mkdir $TRACE_PARENT_FOLDER
 mkdir $TRACE_FOLDER
 for GRAPH in "astro"
 do

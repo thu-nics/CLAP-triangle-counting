@@ -45,7 +45,7 @@ int main(int argc, const char *argv[]){
     }
 
     std::string filename = argv[1];
-    int usedCore = std::stoi(argv[2]);
+    int usedCore = 1;
     int repeat = std::stoi(argv[3]);
 
     // record time of load data
@@ -83,8 +83,6 @@ int main(int argc, const char *argv[]){
     std::vector<std::pair<int, int>> CAM_instance;
     auto computeStart= clock.now();
 
-    int numCores = usedCore;
-    float durtion;
     int cur_node = 0;
     // begin mining loop
     std::list<std::pair<int,int>> workload;
@@ -92,6 +90,7 @@ int main(int argc, const char *argv[]){
     std::set<int> large_degree_node;
 
 
+    // init main memory address
     end_addr = 0;
     start_addr_pos = end_addr;
     mem_offset_pos = (long long)(&CSR_pos[0]) - start_addr_pos;
@@ -109,8 +108,7 @@ int main(int argc, const char *argv[]){
     std::cout << "start_addr_pos: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << start_addr_pos << std::endl;
     std::cout << "start_addr_neigh: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << start_addr_neigh << std::endl;
 
-    // std::cout << "&CSR_pos[0]: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << (&CSR_pos[0]) << std::endl;
-    // std::cout << "&CSR_pos[0]+1: " << "0x" << std::setfill('0') << std::setw(16) << std::hex << (&CSR_pos[0]+1) << std::endl;
+
     // compute workload
 
     int real_cam_size = CSR_neigh.size() / PE_NUM_1;
@@ -122,7 +120,7 @@ int main(int argc, const char *argv[]){
         int cur_size = 0;
         int begin_pos = cur_node;
         int end_pos = cur_node;
-        // std::cout << std::dec <<cur_node << std::endl;
+
         for (int a = cur_node; a < num_node; a++, end_pos++)
         {
             const int* Na_begin = CSR_neigh.data() + CSR_pos[a];
@@ -155,9 +153,7 @@ int main(int argc, const char *argv[]){
     }
 
 
-    std::cout<< "compute done"<<std::endl;
-
-    // assign workload
+    // assign workload to each PE
     int state[PE_NUM_1] = {0};
     int work_time[PE_NUM_1] = {0};
     int operation[PE_NUM_1] = {0};
@@ -189,7 +185,7 @@ int main(int argc, const char *argv[]){
         PE_id = (PE_id + 1) % (PE_NUM_2);
     }
 
-    std::cout<< "assign done"<<std::endl;
+    // find the PE with max workload
     int max_work_time = 0;
     int max_operation = 0;
     int max_PE = 0;
@@ -204,9 +200,11 @@ int main(int argc, const char *argv[]){
             max_PE = i_PE;
         }
     }
+
+    // count triangles and generate memory trace
     long long num_pattern = 0;
 
-    std::cout << "CAM_trace" << std::endl;
+
     for (int i_PE = 0; i_PE < PE_NUM_1+PE_NUM_2; i_PE++)
     {
         for (int i = 0; i < work_pos_list[i_PE].size(); i++)
@@ -259,6 +257,7 @@ int main(int argc, const char *argv[]){
         }
     }
 
+    // write trace to file
     long long total_trace_num = 0;
     unsigned long long max_trace_num = main_mem[max_PE].count_trace('a');
     if (argc == 4) {
@@ -285,10 +284,8 @@ int main(int argc, const char *argv[]){
 
         }
 
-
-    durtion = (clock.now() - computeStart).count() / 1e9;
+    // print result
     std::cout << "num_triangle: " << num_pattern << std::endl;
-    std::cout << "time: " << durtion << std::endl;
     std::cout << "max_trace_num: " << std::dec << max_trace_num << std::endl;
     std::cout << "max_work_time: " << max_work_time << std::endl;
     std::cout << "max_operation: " << max_operation << std::endl;
