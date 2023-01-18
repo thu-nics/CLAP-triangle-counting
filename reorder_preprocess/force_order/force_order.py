@@ -54,7 +54,10 @@ class DynamicAdjMatrix:
 
 
 def write_config(config_dict: Dict):
-    config_file = open("../../output/config/config.txt", "a+")
+    path_name = "../../output/config.txt"
+    if not os.path.exists(os.path.dirname(path_name)):
+        os.makedirs(os.path.dirname(path_name))
+    config_file = open(path_name, "a+")
     for key in config_dict:
         config_file.write(key + " " + str(config_dict[key]) + " ")
     config_file.write("\n")
