@@ -7,8 +7,6 @@
 #include <cstring>
 #include <string>
 #include "graph.hpp"
-#define ALPHA_DEGREE 0.95
-#define ALPHA_CLUSTER 0.05
 
 // use the force-directed algorithm to reorder the graph based on the node degree
 float degree_force(int index, int min_pos, int max_pos){
@@ -32,6 +30,10 @@ bool cmp_relabel(std::pair<float,int>a, std::pair<float,int>b){
     return a.first < b.first;
 }
 
+bool cmp_degree(std::pair<int,int>a, std::pair<int,int>b){
+    return a.first < b.first;
+}
+
 int main(int argc, char** argv) {
     // get the path of the graph
     std::string path = argv[1];
@@ -41,10 +43,25 @@ int main(int argc, char** argv) {
     Graph g;
     g.load_revised_COO(path.c_str());
 
-    // set the hyperparameters
-    float alpha_degree = ALPHA_DEGREE;
-    float alpha_cluster = ALPHA_CLUSTER;
 
+    // set the hyperparameters
+    float alpha_degree;
+    float alpha_cluster;
+    if (argc == 5) {
+        alpha_degree = atof(argv[3]);
+        alpha_cluster = atof(argv[4]);
+    }
+    else if (!g.evenly_distributed) {
+        alpha_degree = 0.9;
+        alpha_cluster = 0.1;
+    } else {
+        alpha_degree = 0.01;
+        alpha_cluster = 0.99;
+    }
+
+    auto clock = std::chrono::high_resolution_clock();
+    auto start = clock.now();
+    
     // initialize the list of degrees and communities
     std::vector<float> comm_center_list(g.num_comm);
     std::vector<std::pair<int, int>> degree_list(g.num_node); // pair of (degree, index)
@@ -56,21 +73,29 @@ int main(int argc, char** argv) {
     // initialize the list of node current positions and initial indices
     std::vector<std::pair<float, int>> relabel_list(g.num_node);
 
-    auto clock = std::chrono::high_resolution_clock();
-    auto start = clock.now();
-
-    // noqa: sort the degree list and return the index of each degree
-    std::sort(degree_list.begin(), degree_list.end());
+    // initialize the degree interval list
+    std::sort(degree_list.begin(), degree_list.end(), cmp_degree);
     int cur_degree = 0;
-    degree_interval[0] = std::make_pair(0, 0);
+    int start_pos = 0;
+    int end_pos = -1;
+
     for (int i = 0; i < degree_list.size(); ++i)  {
-        if (degree_list[i] != cur_degree) {
-            degree_interval[cur_degree].second = i - 1;
-            cur_degree = degree_list[i];
-            degree_interval[cur_degree] = std::make_pair(i, i);
+        if (degree_list[i].first != cur_degree) {
+            cur_degree = degree_list[i].first;
+            start_pos = end_pos + 1;
+            end_pos = i;
+            for (int j = start_pos; j <= end_pos; ++j) {
+                degree_interval[degree_list[j].second].first = start_pos;
+                degree_interval[degree_list[j].second].second = end_pos;
+            }
         }
     }
-    degree_interval[cur_degree].second = degree_list.size() - 1;
+    start_pos = end_pos + 1;
+    end_pos = degree_list.size() - 1;
+    for (int j = start_pos; j <= end_pos; ++j) {
+        degree_interval[degree_list[j].second].first = start_pos;
+        degree_interval[degree_list[j].second].second = end_pos;
+    }
 
     // initialize the relabel list with the initial indices
     for (int i = 0; i < g.num_node; ++i) {
@@ -93,7 +118,7 @@ int main(int argc, char** argv) {
 
         // update the relabel list position with force
         for (int j = 0; j < g.num_node; ++j) {
-            float degree = degree_force(j, degree_interval[g.degree_table[relabel_list[j].second]].first, degree_interval[g.degree_table[relabel_list[j].second]].second);
+            float degree = degree_force(j, degree_interval[relabel_list[j].second].first, degree_interval[relabel_list[j].second].second);
             float cluster = cluster_force(j, comm_center_list[g.comm_table[relabel_list[j].second]]);
             relabel_list[j].first += alpha_degree * degree + alpha_cluster * cluster;
         }
@@ -114,9 +139,6 @@ int main(int argc, char** argv) {
     auto end = clock.now();
     std::chrono::duration<double> diff = end - start;
     std::cout << "Time: " << diff.count() << " s" << std::endl;
-
-    std::cout << relabel_map[0] << std::endl;
-    std::cout << relabel_map[1] << std::endl;
 
     return 0;
 }

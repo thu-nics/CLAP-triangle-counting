@@ -6,12 +6,14 @@
 #include <unordered_map>
 #include <algorithm>
 #include <set>
+#define THRESHOLD 1.2
 
 class Graph {
     public:
     int num_node;
     int num_edge;
     int num_comm;
+    bool evenly_distributed;
     std::vector<int> CSR_node_pos;
     std::vector<int> CSR_neigh;
     std::vector<int> comm_table;
@@ -89,6 +91,19 @@ class Graph {
         CSR_node_pos[cur_node + 1] = edge_buffer.size();
         degree_table[cur_node] = edge_buffer.size() - CSR_node_pos[cur_node];
         num_comm = cur_comm;
+        
+        // calculate variance of degree
+        double mean = 0;
+        for (int i = 0; i < num_node; ++i)
+            mean += degree_table[i];
+        mean /= num_node;
+        double var = 0;
+        for (int i = 0; i < num_node; ++i)
+            var += (degree_table[i] - mean) * (degree_table[i] - mean);
+        if (var / mean >= THRESHOLD)
+            evenly_distributed = false;
+        else
+            evenly_distributed = true;
         return true;
     }
 };
