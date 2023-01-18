@@ -57,6 +57,7 @@ def write_config(config_dict: Dict):
     config_file = open("../../output/config/config.txt", "a+")
     for key in config_dict:
         config_file.write(key + " " + str(config_dict[key]) + " ")
+    config_file.write("\n")
     config_file.close()
 
 
@@ -285,6 +286,7 @@ def main(args, graph_name):
             new_comm_dict_list[i][node_mapping[node]] = comm_dict_list[i][node]
 
     avg_degree = np.mean([graph.degree(v) for v in graph.nodes])  # noqa: F841
+    var_degree = np.var([graph.degree(v) for v in graph.nodes])  # noqa: F841
 
     # return a list: each element is a community containing all node in this community
     comm_mapping_list = [dict() for i in range(layer)]
@@ -295,8 +297,12 @@ def main(args, graph_name):
         )
 
     # set alpha
-    alpha_control = 0.95
-    alpha_cluster = np.array([0.05])
+    if (var_degree / avg_degree) >= 1.2:
+        alpha_control = 0.9
+        alpha_cluster = np.array([0.1])
+    else:
+        alpha_control = 0.01
+        alpha_cluster = np.array([0.99])
     # prepare work
     degree_list = [graph.degree(v) for v in range(len(graph.nodes))]
     degree_list.sort()
