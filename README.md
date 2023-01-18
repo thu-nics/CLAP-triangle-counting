@@ -78,6 +78,7 @@ make
 Run the simulator
 ```bash
 cd ..
+mkdir ../output/trace/force_based_order/astro_cache
 build/CacheSim 8 64 2 4 2 1 ../output/trace/force_based_order/astro/astro0.trace ../output/trace/force_based_order/astro_cache/astro0.trace
 ```
 
