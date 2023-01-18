@@ -17,9 +17,11 @@ This is the official software implementation of the paper "CLAP: Locality Aware 
 
 ## Setup
 
-Clone this repository:  
+Clone this repository with submodule:  
 ```bash
 git clone --recursive https://github.com/dubcyfor3/CLAP-triangle-counting.git
+git submodule init
+git submodule update
 ```
 
 `conda` is recommended for python environment  
@@ -61,6 +63,22 @@ make
 Run the simulator
 ```bash
 sh CAM_run.sh
+```
+
+Build the simulator of CAM-based triangle counting
+```bash
+cd ../..
+cd CAM_simulator
+mkdir build
+cd build
+cmake ..
+make
+```
+
+Run the simulator
+```bash
+cd ..
+build/CacheSim 8 64 2 4 2 1 ../output/trace/force_based_order/astro/astro0.trace ../output/trace/force_based_order/astro_cache/astro0.trace
 ```
 
 ## Demonstration of Force-based reorder
