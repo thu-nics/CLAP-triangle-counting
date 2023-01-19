@@ -91,7 +91,7 @@ class Graph {
         CSR_node_pos[cur_node + 1] = edge_buffer.size();
         degree_table[cur_node] = edge_buffer.size() - CSR_node_pos[cur_node];
         num_comm = cur_comm;
-        
+
         // calculate variance of degree
         double mean = 0;
         for (int i = 0; i < num_node; ++i)

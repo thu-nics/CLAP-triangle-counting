@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
 
     auto clock = std::chrono::high_resolution_clock();
     auto start = clock.now();
-    
+
     // initialize the list of degrees and communities
     std::vector<float> comm_center_list(g.num_comm);
     std::vector<std::pair<int, int>> degree_list(g.num_node); // pair of (degree, index)
