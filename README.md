@@ -5,7 +5,7 @@ This is the official software implementation of the paper "CLAP: Locality Aware 
 ## Demonstration of Force-based reorder
 
 This is the adjacency matrix of the graph in the process of force-based reorder.  
-![force-based demo](https://github.com/dubcyfor3/CLAP-triangle-counting/blob/main/force-based%20demo.gif)
+![force-based demo](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/force-based%20demo.gif)
 
 ## CLAP overview
 
