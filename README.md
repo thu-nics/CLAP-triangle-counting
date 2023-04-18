@@ -11,7 +11,7 @@ This is the adjacency matrix of the graph in the process of force-based reorder.
 
 ![pic1](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides1.gif)
 ![pic2](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides2.gif)
-![pic3](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides1.png)
+![pic3](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides3.png)
 
 
 ## Code structure
