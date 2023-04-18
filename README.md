@@ -7,6 +7,13 @@ This is the official software implementation of the paper "CLAP: Locality Aware 
 This is the adjacency matrix of the graph in the process of force-based reorder.  
 ![force-based demo](https://github.com/dubcyfor3/CLAP-triangle-counting/blob/main/force-based%20demo.gif)
 
+## CLAP overview
+
+![pic1](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides1.gif)
+![pic2](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides2.gif)
+![pic3](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides1.png)
+
+
 ## Code structure
 
 `CAM_simulator` contains a simulator of our CAM-based triangle counting architecture implemented with C++, it performs the triangle counting task on a given target graph and generates the memory trace at the same time.  
