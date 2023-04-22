@@ -152,9 +152,19 @@ neighbor/column indices array: 0 0 1 0 1 2
 
 We use pre-commit to ensure the code quality.
 
+Check your code format by running
+
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
 ## Visualization
 
 We visualize the force-based reorder method.
 This is the adjacency matrix of the graph in the process of force-based reorder. See how the matrix is reordered iteratively.
 
 ![force-based demo](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/figure/force_based_reorder_demo.gif)
+
+You can also modify the code in `reorder_preprocess/force_order_demo` to visualize customized reorder methods.
