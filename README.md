@@ -2,17 +2,13 @@
 
 This is the official software implementation of the paper "CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory".
 
-## Demonstration of Force-based reorder
+## Overview
 
-This is the adjacency matrix of the graph in the process of force-based reorder.  
-![force-based demo](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/force-based%20demo.gif)
+![pic1](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/figure/slides1.gif)
 
-## CLAP overview
+![pic2](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/figure/slides2.gif)
 
-![pic1](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides1.gif)
-![pic2](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides2.gif)
-![pic3](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/slides3.png)
-
+![pic3](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/figure/slides3.png)
 
 ## Code structure
 
@@ -155,3 +151,10 @@ neighbor/column indices array: 0 0 1 0 1 2
 ## CI/CD
 
 We use pre-commit to ensure the code quality.
+
+## Visualization
+
+We visualize the force-based reorder method.
+This is the adjacency matrix of the graph in the process of force-based reorder. See how the matrix is reordered iteratively.
+
+![force-based demo](https://github.com/thu-nics/CLAP-triangle-counting/blob/main/figure/force_based_reorder_demo.gif)
