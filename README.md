@@ -148,6 +148,18 @@ pointer array: 0 0 1 3 6 %point to the correspond position in the following arra
 neighbor/column indices array: 0 0 1 0 1 2
 ```
 
+## Citation
+
+If you find this work helpful, please consider citing our paper:
+```
+@article{fuclap,
+  title={CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory},
+  author={Fu, Tianyu and Wei, Chiyue and Zhu, Zhenhua and Yang, Shang and Yu, Zhongming and Dai, Guohao and Yang, Huazhong and Wang, Yu}
+}
+```
+
+**CLAP paper is [here](https://nicsefc.ee.tsinghua.edu.cn/nics_file/pdf/e30cd3d6-8152-4358-aca5-2d289c4ddcbf.pdf).**
+
 ## CI/CD
 
 We use pre-commit to ensure the code quality.
