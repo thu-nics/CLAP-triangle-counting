@@ -1,6 +1,6 @@
 # CLAP-triangle-counting
 
-This is the official software implementation of the paper "CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory".
+This is the official software implementation of the [paper](https://nicsefc.ee.tsinghua.edu.cn/nics_file/pdf/e30cd3d6-8152-4358-aca5-2d289c4ddcbf.pdf), *CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory*.
 
 ## Overview
 
@@ -150,15 +150,13 @@ neighbor/column indices array: 0 0 1 0 1 2
 
 ## Citation
 
-If you find this work helpful, please consider citing our paper:
+If you find this work helpful, please consider citing our [paper](https://nicsefc.ee.tsinghua.edu.cn/nics_file/pdf/e30cd3d6-8152-4358-aca5-2d289c4ddcbf.pdf):
 ```
 @article{fuclap,
   title={CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory},
   author={Fu, Tianyu and Wei, Chiyue and Zhu, Zhenhua and Yang, Shang and Yu, Zhongming and Dai, Guohao and Yang, Huazhong and Wang, Yu}
 }
 ```
-
-**CLAP paper is [here](https://nicsefc.ee.tsinghua.edu.cn/nics_file/pdf/e30cd3d6-8152-4358-aca5-2d289c4ddcbf.pdf).**
 
 ## CI/CD
 
