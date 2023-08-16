@@ -30,7 +30,7 @@ This is the official software implementation of the [paper](https://nicsefc.ee.t
 
 Clone this repository with submodule:  
 ```bash
-git clone --recursive https://github.com/dubcyfor3/CLAP-triangle-counting.git
+git clone --recursive https://github.com/thu-nics/CLAP-triangle-counting.git
 git submodule init
 git submodule update
 ```
