@@ -154,8 +154,8 @@ If you find this work helpful, please consider citing our [paper](https://nicsef
 ```
 @INPROCEEDINGS{10136997,
   author={Fu, Tianyu and Wei, Chiyue and Zhu, Zhenhua and Yang, Shang and Yu, Zhongming and Dai, Guohao and Yang, Huazhong and Wang, Yu},
-  booktitle={2023 Design, Automation & Test in Europe Conference & Exhibition (DATE)}, 
-  title={CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory}, 
+  booktitle={2023 Design, Automation & Test in Europe Conference & Exhibition (DATE)},
+  title={CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory},
   year={2023},
   volume={},
   number={},
