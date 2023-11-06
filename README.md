@@ -68,7 +68,6 @@ python force_order.py
 
 Build the simulator of CAM-based triangle counting
 ```bash
-cd ../..
 cd CAM_simulator
 mkdir build
 cd build
@@ -76,24 +75,23 @@ cmake ..
 make
 ```
 
-Run the simulator
+Run the simulator, the simulator perform triangle counting and generate the memory trace of buffer in each PE during computation
 ```bash
 sh CAM_run.sh
 ```
 
-Build the simulator of CAM-based triangle counting
+Build the cache simulator
 ```bash
-cd ../..
-cd CAM_simulator
+cd cache_sim
 mkdir build
 cd build
 cmake ..
 make
 ```
 
-Run the simulator
+Run the cache simulator to generate DRAM access trace from the given buffer memory trace, users can use [Ramulator](https://github.com/CMU-SAFARI/ramulator) to get the DRAM access latency with the generated trace
 ```bash
-cd ..
+cd cache_sim
 mkdir ../output/trace/force_based_order/astro_cache
 build/CacheSim 8 64 2 4 2 1 ../output/trace/force_based_order/astro/astro0.trace ../output/trace/force_based_order/astro_cache/astro0.trace
 ```
