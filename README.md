@@ -3,7 +3,7 @@
 This is the official software implementation of the [paper](https://nicsefc.ee.tsinghua.edu.cn/nics_file/pdf/e30cd3d6-8152-4358-aca5-2d289c4ddcbf.pdf), *CLAP: Locality Aware and Parallel Triangle Counting with Content Addressable Memory*.
 
 > Please consider staring this repo or citing our work if you find it interesting 🙌
-> 
+>
 > If you have any questions, we are happy to help.
 
 ## Overview
